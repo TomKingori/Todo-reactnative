@@ -1,15 +1,49 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function SingleTodo({ todo }) {
+export default function SingleTodo({ todo, setTodos, todos }) {
+  const [edit, setEdit] = useState(false);
+  const [editText, setEditText] = useState(todo.text);
 
-  
+  const handleEdit = () => {
+    if (!edit) setEdit(!edit);
+    else {
+      setEdit(!edit);
+      setTodos(
+        todos.map((t) =>
+          t.id === todo.id
+            ? {
+                id: t.id,
+                text: editText,
+              }
+            : t
+        )
+      );
+    }
+  };
 
+  const handleDelete = (id) => {
+    setTodos(todos.filter((t) => t.id !== id));
+  };
 
   return (
     <View style={styles.todo}>
-      <Text style={styles.todotext}>{todo.text}</Text>
+      {!edit ? (
+        <Text style={styles.todotext}>{todo.text}</Text>
+      ) : (
+        <TextInput
+          style={styles.todoinput}
+          value={editText}
+          onChangeText={(text) => setEditText(text)}
+        />
+      )}
 
       <TouchableOpacity>
         <MaterialIcons
@@ -17,6 +51,7 @@ export default function SingleTodo({ todo }) {
           name="edit"
           size={24}
           color="black"
+          onPress={handleEdit}
         />
       </TouchableOpacity>
 
@@ -26,6 +61,7 @@ export default function SingleTodo({ todo }) {
           name="delete"
           size={24}
           color="black"
+          onPress={() => handleDelete(todo.id)}
         />
       </TouchableOpacity>
     </View>
@@ -52,5 +88,13 @@ const styles = StyleSheet.create({
   },
   todoaction: {
     marginLeft: 15,
+  },
+  todoinput: {
+    flex: 1,
+    fontSize: 18,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    borderColor: "grey",
+    borderWidth: 1,
   },
 });

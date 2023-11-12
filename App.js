@@ -40,7 +40,7 @@ const App = () => {
         <FlatList
           data={todos}
           renderItem={({ item }) => (
-            <SingleTodo todo={item} todos={todos} setTodo={setTodos} />
+            <SingleTodo todo={item} todos={todos} setTodos={setTodos} />
           )}
           keyExtractor={(item) => item.id.toString()}
         />

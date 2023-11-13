@@ -5,12 +5,17 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SingleTodo({ todo, setTodos, todos }) {
   const [edit, setEdit] = useState(false);
   const [editText, setEditText] = useState(todo.text);
+
+  useEffect(() => {
+    AsyncStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const handleEdit = () => {
     if (!edit) setEdit(!edit);
@@ -27,6 +32,7 @@ export default function SingleTodo({ todo, setTodos, todos }) {
         )
       );
     }
+    AsyncStorage.setItem("todos", JSON.stringify(todos));
   };
 
   const handleDelete = (id) => {

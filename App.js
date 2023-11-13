@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import SingleTodo from "./components/SingleTodo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const App = () => {
   const [todo, setTodo] = useState("");
@@ -20,6 +21,16 @@ const App = () => {
     setTodos([...todos, { id: Date.now(), text: todo }]);
     setTodo("");
   };
+
+  const fetchTodos=async()=>{
+    const data = await AsyncStorage.getItem('todos')
+    if(data) setTodos(JSON.parse(data))
+  }
+
+  useEffect(() => {
+    fetchTodos();
+  }, [])
+  
 
   return (
     <View style={styles.container}>
